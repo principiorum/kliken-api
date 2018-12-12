@@ -6,20 +6,6 @@ from crawler import news_crawler_viva
 from operator import itemgetter
 from sklearn.externals import joblib
 
-viva = news_crawler_viva.data_json[:25]
-tempo = news_crawler_tempo.data_json[:25]
-republika = news_crawler_republika.data_json[:25]
-kompas = news_crawler_kompas.data_json[:25]
-
-news_ready = tempo+republika+kompas+viva
-
-def filter(data):
-    loaded_model = joblib.load('lsvcmodel.pkl')
-
-    predicted = loaded_model.predict(data)
-    return predicted
-
-
 class Clickbait(Resource):
 	parser = reqparse.RequestParser()
 	parser.add_argument('tmp_code',
@@ -27,6 +13,20 @@ class Clickbait(Resource):
 		required=True,
 		help='This field cannot be left blank'
 	)
+
+	def __init__(self):
+		self.viva = news_crawler_viva.data_json[:25]
+		self.tempo = news_crawler_tempo.data_json[:25]
+		self.republika = news_crawler_republika.data_json[:25]
+		self.kompas = news_crawler_kompas.data_json[:25]
+
+		self.news_ready = self.tempo+self.republika+self.kompas+self.viva
+
+	def filter(self, data):
+	    loaded_model = joblib.load('lsvcmodel.pkl')
+
+	    predicted = loaded_model.predict(data)
+	    return predicted
 
 	def get(self):
 		data = Clickbait.parser.parse_args()
@@ -39,13 +39,13 @@ class Clickbait(Resource):
 			}, 400
 
 		t = []
-		for i in news_ready:
+		for i in self.news_ready:
 		    t.append(i['title'])
 
-		predicted = filter(t)
+		predicted = self.filter(t)
 
 		news = []
-		for x in zip(news_ready, predicted):
+		for x in zip(self.news_ready, predicted):
 		    if x[1] == 0:
 		        news.append(x[0])
 
@@ -67,8 +67,22 @@ class NonClickbait(Resource):
 		help='This field cannot be left blank'
 	)
 
+	def __init__(self):
+		self.viva = news_crawler_viva.data_json[:25]
+		self.tempo = news_crawler_tempo.data_json[:25]
+		self.republika = news_crawler_republika.data_json[:25]
+		self.kompas = news_crawler_kompas.data_json[:25]
+
+		self.news_ready = self.tempo+self.republika+self.kompas+self.viva
+
+	def filter(self, data):
+	    loaded_model = joblib.load('lsvcmodel.pkl')
+
+	    predicted = loaded_model.predict(data)
+	    return predicted
+
 	def get(self):
-		data = NonClickbait.parser.parse_args()
+		data = Clickbait.parser.parse_args()
 
 		if data['tmp_code'] != 'masahmadbagus006':
 			return {
@@ -78,13 +92,13 @@ class NonClickbait(Resource):
 			}, 400
 
 		t = []
-		for i in news_ready:
+		for i in self.news_ready:
 		    t.append(i['title'])
 
-		predicted = filter(t)
+		predicted = self.filter(t)
 
 		news = []
-		for x in zip(news_ready, predicted):
+		for x in zip(self.news_ready, predicted):
 		    if x[1] == 1:
 		        news.append(x[0])
 
