@@ -7,13 +7,6 @@ from operator import itemgetter
 from sklearn.externals import joblib
 
 class Clickbait(Resource):
-	parser = reqparse.RequestParser()
-	parser.add_argument('tmp_code',
-		type = str,
-		required=True,
-		help='This field cannot be left blank'
-	)
-
 	def __init__(self):
 		self.viva = news_crawler_viva.data_json[:25]
 		self.tempo = news_crawler_tempo.data_json[:25]
@@ -29,15 +22,6 @@ class Clickbait(Resource):
 	    return predicted
 
 	def get(self):
-		data = Clickbait.parser.parse_args()
-
-		if data['tmp_code'] != 'masahmadbagus006':
-			return {
-				'status': 'success',
-				'code': '400',
-				'message': 'Unauthorized access'
-			}, 400
-
 		t = []
 		for i in self.news_ready:
 		    t.append(i['title'])
@@ -59,14 +43,7 @@ class Clickbait(Resource):
 			}
 		}
 
-class NonClickbait(Resource):
-	parser = reqparse.RequestParser()
-	parser.add_argument('tmp_code',
-		type = str,
-		required=True,
-		help='This field cannot be left blank'
-	)
-
+class Clickbait(Resource):
 	def __init__(self):
 		self.viva = news_crawler_viva.data_json[:25]
 		self.tempo = news_crawler_tempo.data_json[:25]
@@ -82,15 +59,6 @@ class NonClickbait(Resource):
 	    return predicted
 
 	def get(self):
-		data = Clickbait.parser.parse_args()
-
-		if data['tmp_code'] != 'masahmadbagus006':
-			return {
-				'status': 'success',
-				'code': '400',
-				'message': 'Unauthorized access'
-			}, 400
-
 		t = []
 		for i in self.news_ready:
 		    t.append(i['title'])
