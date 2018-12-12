@@ -43,7 +43,7 @@ class Clickbait(Resource):
 			}
 		}
 
-class Clickbait(Resource):
+class NonClickbait(Resource):
 	def __init__(self):
 		self.viva = news_crawler_viva.data_json[:25]
 		self.tempo = news_crawler_tempo.data_json[:25]
