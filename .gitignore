@@ -2,3 +2,5 @@ nar/*
 __pycache__/
 *.pyc
 .env
+data.db
+uwsgi.ini
