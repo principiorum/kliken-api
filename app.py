@@ -16,7 +16,7 @@ app.secret_key = 'maimjasjhbfsb345kjb3zhfgnwETert#%@Sf'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db')
 
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(seconds=60)
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(seconds=3600000)
 app.config['JWT_SECRET_KEY'] = 'super-secret'  # Change this!
 jwt = JWTManager(app)
 
